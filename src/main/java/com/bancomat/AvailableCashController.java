@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AvailableCashController {
     AutomaticTellerMachine ATM = AutomaticTellerMachine.getInstance();
     @GetMapping("/available")
-    public AvailableCash availableCash(){
-        return new AvailableCash(ATM.getNumberOfBillsByType());
+    public SoldInquiry availableCash(){
+        return new SoldInquiry(ATM.getNumberOfBillsByType());
     }
 }
