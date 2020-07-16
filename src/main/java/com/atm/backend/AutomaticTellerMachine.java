@@ -6,8 +6,15 @@ import java.util.*;
 
 public class AutomaticTellerMachine {
     private final HashMap<Bill.Type, Integer> numberOfBillsByType;
+    private static AutomaticTellerMachine instance = null;
 
-    public AutomaticTellerMachine() {
+    public static AutomaticTellerMachine getInstance(){
+        if(instance == null){
+            instance = new AutomaticTellerMachine();
+        }
+        return instance;
+    }
+    private AutomaticTellerMachine() {
         numberOfBillsByType = new HashMap<>();
         setATMState(100, 100, 100, 50, 50);
     }

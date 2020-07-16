@@ -26,15 +26,18 @@ public class ATMTests {
     }
 
     @Test
-    public void initialStateChecker() {
-        AutomaticTellerMachine tester = new AutomaticTellerMachine();
-        int[] bills = {100, 100, 100, 50, 50};
-        assertBillsQuantityHelper(bills, "Initial state is faulty", tester);
+    public void setATMStateChecker(){
+        int []bills = {100, 100, 100, 50, 50};
+        AutomaticTellerMachine tester = AutomaticTellerMachine.getInstance();
+        tester.setATMState(100, 100, 100, 50, 50);
+        assertBillsQuantityHelper(bills, "set ATM state faulty", tester);
     }
 
     @Test
     public void fillUpChecker() {
-        AutomaticTellerMachine tester = new AutomaticTellerMachine();
+        AutomaticTellerMachine tester = AutomaticTellerMachine.getInstance();
+        tester.setATMState(100,100,100,50,50);
+
         tester.fillUp(Bill.Type.ONE_RON, 10);
         tester.fillUp(Bill.Type.FIVE_RON, 10);
         tester.fillUp(Bill.Type.TEN_RON, 10);
@@ -47,7 +50,9 @@ public class ATMTests {
 
     @Test
     public void modifyNrBillsChecker() {
-        AutomaticTellerMachine tester = new AutomaticTellerMachine();
+        AutomaticTellerMachine tester = AutomaticTellerMachine.getInstance();
+        tester.setATMState(100,100,100,50,50);
+
         int[] bills = {5, 1, 2, 3, 4};
 
         tester.modifyAllBills(bills, 1);
@@ -65,7 +70,9 @@ public class ATMTests {
 
     @Test
     public void withdrawalRequestsChecker() {
-        AutomaticTellerMachine tester = new AutomaticTellerMachine();
+        AutomaticTellerMachine tester = AutomaticTellerMachine.getInstance();
+        tester.setATMState(100,100,100,50,50);
+
         int[] bills = {1, 0, 0, 1, 1};
         assertArrayEquals(bills, tester.withdrawalRequestAsArray(151));
 
@@ -82,7 +89,9 @@ public class ATMTests {
 
     @Test
     public void multipleWithdrawalRequestsChecker() {
-        AutomaticTellerMachine tester = new AutomaticTellerMachine();
+        AutomaticTellerMachine tester = AutomaticTellerMachine.getInstance();
+        tester.setATMState(100,100,100,50,50);
+
         int[] bills = new int[5];
         tester.setATMState(10, 9, 5, 1, 1);
 

@@ -20,7 +20,7 @@ public class Driver {
     }
 
     public static void main(String[] args) {
-        AutomaticTellerMachine ATM = new AutomaticTellerMachine();
+        AutomaticTellerMachine ATM = AutomaticTellerMachine.getInstance();
         do {
             System.out.println("What sum would you like to withdraw? Please enter a positive number");
             transaction(ATM);
