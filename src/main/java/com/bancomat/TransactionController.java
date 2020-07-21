@@ -13,14 +13,14 @@ public class TransactionController {
     AutomaticTellerMachine ATM = AutomaticTellerMachine.getInstance();
     StringBuilder finalText = new StringBuilder();
     @GetMapping("/transaction")
-    public String transaction(@RequestParam(defaultValue = "0") int cashAmount){
+    public SoldInquiry transaction(@RequestParam(defaultValue = "0") int cashAmount){
         finalText.setLength(0);
         if(cashAmount < 0){
-            return finalText.append("You cheecky bastard you! You can't withdraw negative values!").toString();
+            return null;
         }
         if(cashAmount == 0)
-            return finalText.append("Here is the ATM remaining cash:").append("\r\n").append(ATM.getNumberOfBillsByType()).toString();
-        return finalText.append("Here is your cash: ").append("\r\n").append(ATM.withdrawalRequestAsMap(cashAmount)).toString();
+            return new SoldInquiry(ATM.getNumberOfBillsByType());
+        return new SoldInquiry(ATM.withdrawalRequestAsMap(cashAmount));
     }
 
 }
