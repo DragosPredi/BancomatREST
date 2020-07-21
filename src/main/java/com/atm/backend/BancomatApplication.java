@@ -1,4 +1,4 @@
-package com.bancomat;
+package com.atm.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

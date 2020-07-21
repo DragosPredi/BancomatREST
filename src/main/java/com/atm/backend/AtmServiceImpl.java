@@ -1,20 +1,15 @@
 package com.atm.backend;
 
 import com.atm.backend.bills.Bill;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-public class AutomaticTellerMachine {
+@Service
+public class AtmServiceImpl implements AtmService{
     private final HashMap<Bill.Type, Integer> numberOfBillsByType;
-    private static AutomaticTellerMachine instance = null;
 
-    public static AutomaticTellerMachine getInstance(){
-        if(instance == null){
-            instance = new AutomaticTellerMachine();
-        }
-        return instance;
-    }
-    private AutomaticTellerMachine() {
+    public AtmServiceImpl() {
         numberOfBillsByType = new HashMap<>();
         setATMState(100, 100, 100, 50, 50);
     }

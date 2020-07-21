@@ -1,12 +1,15 @@
-package com.bancomat;
+package com.atm.backend;
 
-import com.atm.backend.AutomaticTellerMachine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AvailableCashController {
-    AutomaticTellerMachine ATM = AutomaticTellerMachine.getInstance();
+
+    @Autowired
+    AtmService ATM;
+
     @GetMapping("/available")
     public SoldInquiry availableCash(){
         return new SoldInquiry(ATM.getNumberOfBillsByType());
