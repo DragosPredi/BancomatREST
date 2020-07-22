@@ -20,7 +20,7 @@ public class CashManager {
         }
     }
 
-    public static void checkATMBalance(AtmServiceImpl ATM) {
+    public static void checkATMBalance(AtmService ATM) {
         int nrOfHundredBills = ATM.getBillsQuantityByType(Bill.Type.ONEHUNDRED_RON);
         int nrOfFiftyBills = ATM.getBillsQuantityByType(Bill.Type.FIFTY_RON);
 

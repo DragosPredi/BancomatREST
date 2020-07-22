@@ -40,6 +40,8 @@ public class AtmController {
         }
 
         HashMap<Bill.Type, Integer> transactionBillsMap = ATM.withdrawalRequestAsMap(cashAmount);
+        CashManager.checkATMBalance(ATM);
+
         boolean noMoreCash = false;
 
         for (Bill.Type billType : Bill.Type.values()) {
@@ -47,7 +49,8 @@ public class AtmController {
                 noMoreCash = true;
         }
         if (!noMoreCash) {
-            return new SoldInquiryDto(transactionBillsMap).toString();
+            //return new SoldInquiryDto(transactionBillsMap).toString();
+            return transactionBillsMap.toString();
         } else {
             if (Math.random() > 0.5)
                 return client.getDataFromAdelina(URI.create(adelinaAtmUrl), cashAmount);
