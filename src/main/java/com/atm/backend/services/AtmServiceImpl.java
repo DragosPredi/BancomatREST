@@ -1,12 +1,13 @@
-package com.atm.backend;
+package com.atm.backend.services;
 
 import com.atm.backend.bills.Bill;
+import com.atm.backend.services.AtmService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class AtmServiceImpl implements AtmService{
+public class AtmServiceImpl implements AtmService {
     private final HashMap<Bill.Type, Integer> numberOfBillsByType;
 
     public AtmServiceImpl() {

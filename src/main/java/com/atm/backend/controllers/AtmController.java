@@ -1,7 +1,10 @@
-package com.atm.backend;
+package com.atm.backend.controllers;
 
+import com.atm.backend.services.AtmService;
+import com.atm.backend.myUtils.CashManager;
+import com.atm.backend.feign.SimpleClient;
+import com.atm.backend.dto.SoldInquiryDto;
 import com.atm.backend.bills.Bill;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Random;
 
 @RestController
 public class AtmController {

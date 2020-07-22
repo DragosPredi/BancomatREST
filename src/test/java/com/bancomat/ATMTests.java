@@ -1,7 +1,7 @@
 /*
 package com.bancomat;
 
-import com.atm.backend.AtmServiceImpl;
+import com.atm.backend.services.AtmServiceImpl;
 import com.atm.backend.bills.Bill;
 import org.junit.jupiter.api.Test;
 

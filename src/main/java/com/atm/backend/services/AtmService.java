@@ -1,4 +1,4 @@
-package com.atm.backend;
+package com.atm.backend.services;
 
 import com.atm.backend.bills.Bill;
 

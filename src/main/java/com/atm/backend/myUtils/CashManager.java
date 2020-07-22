@@ -1,7 +1,8 @@
-package com.atm.backend;
+package com.atm.backend.myUtils;
 
 import com.atm.backend.bills.Bill;
 import com.atm.backend.myUtils.MyUtils;
+import com.atm.backend.services.AtmService;
 
 public class CashManager {
 

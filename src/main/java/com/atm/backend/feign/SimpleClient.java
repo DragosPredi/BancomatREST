@@ -1,4 +1,4 @@
-package com.atm.backend;
+package com.atm.backend.feign;
 
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
