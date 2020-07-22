@@ -1,8 +1,10 @@
 package com.atm.backend;
 
 import com.atm.backend.bills.Bill;
+import com.atm.backend.myUtils.MyUtils;
 
 public class CashManager {
+
     private static void critical() {
         MyUtils.sendEmail("fillMeUpPlease@superbancomat.com",
                 Bill.Type.ONEHUNDRED_RON + " amount is under 10% ");
