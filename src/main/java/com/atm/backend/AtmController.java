@@ -1,44 +1,59 @@
 package com.atm.backend;
 
 import com.atm.backend.bills.Bill;
-import com.fasterxml.jackson.core.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Random;
 
 @RestController
 public class AtmController {
-
-
     AtmService ATM;
 
-    @Autowired
-    SimpleClient clientDIana;
+    SimpleClient client;
 
-    public AtmController(AtmService ATM) {
+    @Value("${adelina.atm}")
+    private String adelinaAtmUrl;
+
+    @Value("${diana.atm}")
+    private String dianaAtmUrl;
+
+    public AtmController(AtmService ATM, SimpleClient client) {
         this.ATM = ATM;
+        this.client = client;
     }
 
     @GetMapping("/available")
-    public SoldInquiry availableCash(){
-        return new SoldInquiry(ATM.getNumberOfBillsByType());
+    public SoldInquiryDto availableCash() {
+        return new SoldInquiryDto(ATM.getNumberOfBillsByType());
     }
 
     @GetMapping("/transaction")
-    public SoldInquiry transaction(@RequestParam(defaultValue = "0") int cashAmount){
-        if(cashAmount < 0){
+    public String transaction(@RequestParam(defaultValue = "0") int cashAmount) {
+        if (cashAmount < 0) {
             return null;
         }
-        if(cashAmount == 0)
-            return new SoldInquiry(ATM.getNumberOfBillsByType());
 
         HashMap<Bill.Type, Integer> transactionBillsMap = ATM.withdrawalRequestAsMap(cashAmount);
-        return new SoldInquiry(transactionBillsMap);
-    }
+        boolean noMoreCash = false;
 
+        for (Bill.Type billType : Bill.Type.values()) {
+            if (transactionBillsMap.get(billType).equals(Integer.MAX_VALUE))
+                noMoreCash = true;
+        }
+        if (!noMoreCash) {
+            return new SoldInquiryDto(transactionBillsMap).toString();
+        } else {
+            if (Math.random() > 0.5)
+                return client.getDataFromAdelina(URI.create(adelinaAtmUrl), cashAmount);
+            else
+                return client.getDataFromDiana(URI.create(dianaAtmUrl), cashAmount);
+
+        }
+    }
 }
