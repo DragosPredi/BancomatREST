@@ -6,7 +6,6 @@ plugins {
 
 group = 'com'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
@@ -23,6 +22,14 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4")
+
+    compile "org.togglz:togglz-spring-boot-starter:2.5.0.Final"
+    compile "org.togglz:togglz-console:2.5.0.Final"
+    compile "org.togglz:togglz-spring-security:2.5.0.Final"
+
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 }
 dependencyManagement {
     imports {
