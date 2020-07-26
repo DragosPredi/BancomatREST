@@ -6,6 +6,18 @@ import java.util.HashMap;
 
 public interface AtmService {
     HashMap<Bill.Type, Integer> withdrawalRequestAsMap(int cashAmount);
-    HashMap<Bill.Type, Integer> getNumberOfBillsByType();
-    int getBillsQuantityByType(Bill.Type type);
+
+    int[] withdrawalRequestAsArray(int cashAmount);
+
+    HashMap<Bill.Type, Integer> getNumberOfBillsByTypeAsMap();
+
+    int getOneTypeBillQuantity(Bill.Type type);
+
+    void setATMState(int [] billsArr);
+
+    void fillUpOneTypeBill(Bill.Type type, int quantity);
+
+    void addBills(int[] billsArr);
+
+    void removeBills(int[] billsArr);
 }

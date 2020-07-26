@@ -1,7 +1,6 @@
 package com.atm.backend.myUtils;
 
 import com.atm.backend.bills.Bill;
-import com.atm.backend.myUtils.MyUtils;
 import com.atm.backend.services.AtmService;
 
 public class CashManager {
@@ -22,8 +21,8 @@ public class CashManager {
     }
 
     public static void checkATMBalance(AtmService ATM) {
-        int nrOfHundredBills = ATM.getBillsQuantityByType(Bill.Type.ONEHUNDRED_RON);
-        int nrOfFiftyBills = ATM.getBillsQuantityByType(Bill.Type.FIFTY_RON);
+        int nrOfHundredBills = ATM.getOneTypeBillQuantity(Bill.Type.ONEHUNDRED_RON);
+        int nrOfFiftyBills = ATM.getOneTypeBillQuantity(Bill.Type.FIFTY_RON);
 
         if (nrOfHundredBills < 5) {
             critical();

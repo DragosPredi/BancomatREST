@@ -1,15 +1,17 @@
 package com.atm.backend.controllers;
 
-import com.atm.backend.services.AtmService;
-import com.atm.backend.myUtils.CashManager;
-import com.atm.backend.feign.SimpleClient;
-import com.atm.backend.dto.SoldInquiryDto;
 import com.atm.backend.bills.Bill;
+import com.atm.backend.dto.SoldInquiryDto;
+import com.atm.backend.feign.SimpleClient;
+import com.atm.backend.myUtils.CashManager;
+import com.atm.backend.myUtils.MyUtils;
+import com.atm.backend.services.AtmService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
@@ -32,11 +34,11 @@ public class AtmController {
 
     @GetMapping("/available")
     public SoldInquiryDto availableCash() {
-        return new SoldInquiryDto(ATM.getNumberOfBillsByType());
+        return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(ATM.getNumberOfBillsByTypeAsMap()), "Available cash in ATM");
     }
 
     @GetMapping("/transaction")
-    public String transaction(@RequestParam(defaultValue = "0") int cashAmount) {
+    public SoldInquiryDto transaction(@RequestParam(defaultValue = "0") int cashAmount) {
         if (cashAmount < 0) {
             return null;
         }
@@ -51,8 +53,7 @@ public class AtmController {
                 noMoreCash = true;
         }
         if (!noMoreCash) {
-            //return new SoldInquiryDto(transactionBillsMap).toString();
-            return transactionBillsMap.toString();
+            return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(transactionBillsMap), "Transaction successful");
         } else {
             if (Math.random() > 0.5)
                 return client.getDataFromAdelina(URI.create(adelinaAtmUrl), cashAmount);

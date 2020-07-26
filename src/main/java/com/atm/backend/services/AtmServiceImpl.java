@@ -1,7 +1,6 @@
 package com.atm.backend.services;
 
 import com.atm.backend.bills.Bill;
-import com.atm.backend.services.AtmService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,7 +11,7 @@ public class AtmServiceImpl implements AtmService {
 
     public AtmServiceImpl() {
         numberOfBillsByType = new HashMap<>();
-        setATMState(100, 100, 100, 50, 50);
+        setATMState(new int[]{100, 100, 100, 50, 50});
     }
 
     /**
@@ -21,7 +20,7 @@ public class AtmServiceImpl implements AtmService {
      * @param type     -> type of bill to be added
      * @param quantity -> number of bills
      */
-    public void fillUp(Bill.Type type, int quantity) {
+    public void fillUpOneTypeBill(Bill.Type type, int quantity) {
         int leftOverCash = numberOfBillsByType.get(type);
         numberOfBillsByType.put(type, quantity + leftOverCash);
     }
@@ -32,7 +31,7 @@ public class AtmServiceImpl implements AtmService {
      * @param type -> bill to be investigated
      * @return -> number of bills of requested type
      */
-    public int getBillsQuantityByType(Bill.Type type) {
+    public int getOneTypeBillQuantity(Bill.Type type) {
         return numberOfBillsByType.get(type);
     }
 
@@ -44,32 +43,34 @@ public class AtmServiceImpl implements AtmService {
      * (1, 5, 10, 50, 100)
      *
      * @param billsToBeModified -> array conatining the number of bills to be modified
-     * @param sign              -> +1 for adding, -1 for removing
      */
-    public void modifyAllBills(int[] billsToBeModified, int sign) {
-        assert (sign == -1 || sign == 1) : "Invalid sign";
+    public void addBills(int[] billsToBeModified) {
 
         int cont = 0;
         for (Bill.Type billType : Bill.Type.values()) {
-            fillUp(billType, (sign * billsToBeModified[cont++]));
+            fillUpOneTypeBill(billType, billsToBeModified[cont++]);
+        }
+    }
+
+
+    public void removeBills(int[] billsToBeModified) {
+        int cont = 0;
+        for (Bill.Type billType : Bill.Type.values()) {
+            fillUpOneTypeBill(billType, (-1 * billsToBeModified[cont++]));
         }
     }
 
     /**
      * Set the ATM with a specified number of cash
      *
-     * @param one        -> number of 1 RON bills
-     * @param five       -> number of 5 RON bills
-     * @param ten        -> number of 10 RON bills
-     * @param fifty      -> number of 50 RON bills
-     * @param oneHundred -> number of 100 RON bills
+     * @param billsArr representing the number of bills
+     *                 in ascending order (One, Five, Ten, etc.)
      */
-    public void setATMState(int one, int five, int ten, int fifty, int oneHundred) {
-        numberOfBillsByType.put(Bill.Type.ONE_RON, one);
-        numberOfBillsByType.put(Bill.Type.FIVE_RON, five);
-        numberOfBillsByType.put(Bill.Type.TEN_RON, ten);
-        numberOfBillsByType.put(Bill.Type.FIFTY_RON, fifty);
-        numberOfBillsByType.put(Bill.Type.ONEHUNDRED_RON, oneHundred);
+    public void setATMState(int [] billsArr) {
+        int cont = 0;
+        for(Bill.Type type : Bill.Type.values()){
+            numberOfBillsByType.put(type, billsArr[cont++]);
+        }
     }
 
     /**
@@ -106,9 +107,9 @@ public class AtmServiceImpl implements AtmService {
 
         //Add last combination of bills no longer available
         if (billType == Bill.Type.ONE_RON) {
-            modifyAllBills(billsUsedHistory[currentAmount - 1], 1);
+            addBills(billsUsedHistory[currentAmount - 1]);
         } else {
-            modifyAllBills(billsUsedHistory[currentAmount], 1);
+            addBills(billsUsedHistory[currentAmount]);
         }
         //Get base combination
         System.arraycopy(billsUsedHistory[currentAmount - billValue],
@@ -117,7 +118,7 @@ public class AtmServiceImpl implements AtmService {
         billsUsedHistory[currentAmount][billToArrayIndex(billType)] =
                 billsUsedHistory[currentAmount - billValue][billToArrayIndex(billType)] + 1;
         //Subtract combination from ATM cash
-        modifyAllBills(billsUsedHistory[currentAmount], -1);
+        removeBills(billsUsedHistory[currentAmount]);
     }
 
     /**
@@ -168,7 +169,7 @@ public class AtmServiceImpl implements AtmService {
         }
         return typeToNrOfBills;
     }
-    public HashMap<Bill.Type, Integer> getNumberOfBillsByType() {
+    public HashMap<Bill.Type, Integer> getNumberOfBillsByTypeAsMap() {
         return numberOfBillsByType;
     }
 }
