@@ -1,18 +1,36 @@
 package com.atm.backend.dto;
 
-import com.atm.backend.bills.Bill;
-
 import java.util.HashMap;
+import java.util.Map;
 
 public class SoldInquiryDto {
-    HashMap<Bill.Type, Integer> typeToNrOfBills;
 
+   Map<String, Integer> bills;
+   String message;
 
-    public SoldInquiryDto(HashMap<Bill.Type, Integer> typeToNrOfBills) {
-        this.typeToNrOfBills = typeToNrOfBills;
+    public SoldInquiryDto() {
+
     }
 
-    public HashMap<Bill.Type, Integer> getTypeToNrOfBills() {
-        return typeToNrOfBills;
+    public SoldInquiryDto(Map<String, Integer> bills, String message) {
+        this.bills = bills;
+        this.message = message;
+    }
+
+
+    public Map<String, Integer> getBills() {
+        return bills;
+    }
+
+    public void setBills(Map<String, Integer> bills) {
+        this.bills = bills;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
