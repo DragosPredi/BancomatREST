@@ -1,13 +1,19 @@
 package com.bancomat;
 
+import com.atm.backend.dto.SoldInquiryDto;
 import com.atm.backend.services.AtmService;
 import com.atm.backend.bills.Bill;
 import com.atm.backend.services.AtmServiceImpl;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static com.jayway.restassured.RestAssured.*;
 
 public class ATMTests {
 
@@ -124,6 +130,44 @@ public class ATMTests {
 
         setArray(bills, 3, 1, 1, 1, 9);
         assertArrayEquals(bills, tester.withdrawalRequestAsArray(968));
+    }
+
+    @Test
+    public void withdraw101Test() {
+        SoldInquiryDto output = get("http://localhost:8080/transaction?cashAmount=101").as(SoldInquiryDto.class);
+        Map<String, Integer> expected = new TreeMap<>();
+        expected.put("ONEHUNDRED_RON(100)", 1);
+        expected.put("ONE_RON(1)", 1);
+        expected.put("TEN_RON(10)", 0);
+        expected.put("FIVE_RON(5)", 0);
+        expected.put("FIFTY_RON(50)", 0);
+
+        assertEquals(expected, output.getBills());
+        assertEquals("Transaction approved", output.getMessage());
+    }
+
+    @Test
+    public void withdraw101and1000Test() {
+        SoldInquiryDto output = get("http://localhost:8080/transaction?cashAmount=101").as(SoldInquiryDto.class);
+        Map<String, Integer> expected = new TreeMap<>();
+        expected.put("ONEHUNDRED_RON(100)", 1);
+        expected.put("ONE_RON(1)", 1);
+        expected.put("TEN_RON(10)", 0);
+        expected.put("FIVE_RON(5)", 0);
+        expected.put("FIFTY_RON(50)", 0);
+        assertEquals(expected, output.getBills());
+        assertEquals("Transaction approved", output.getMessage());
+
+        output = get("http://localhost:8080/transaction?cashAmount=1000").as(SoldInquiryDto.class);
+        expected.clear();
+        expected.put("ONEHUNDRED_RON(100)", 10);
+        expected.put("ONE_RON(1)", 0);
+        expected.put("TEN_RON(10)", 0);
+        expected.put("FIVE_RON(5)", 0);
+        expected.put("FIFTY_RON(50)", 0);
+
+        assertEquals(expected, output.getBills());
+        assertEquals("Transaction approved", output.getMessage());
     }
 
 }
