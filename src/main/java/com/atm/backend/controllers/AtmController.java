@@ -2,32 +2,28 @@ package com.atm.backend.controllers;
 
 import com.atm.backend.bills.Bill;
 import com.atm.backend.dto.SoldInquiryDto;
+import com.atm.backend.exceptions.NotEnoughMoneyException;
+import com.atm.backend.feign.FeignController;
 import com.atm.backend.feign.SimpleClient;
 import com.atm.backend.myUtils.CashManager;
 import com.atm.backend.myUtils.MyUtils;
 import com.atm.backend.services.AtmService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 public class AtmController {
     AtmService ATM;
 
-    SimpleClient client;
+    FeignController client;
 
-    @Value("${adelina.atm}")
-    private String adelinaAtmUrl;
-
-    @Value("${diana.atm}")
-    private String dianaAtmUrl;
-
-    public AtmController(AtmService ATM, SimpleClient client) {
+    public AtmController(AtmService ATM, FeignController client) {
         this.ATM = ATM;
         this.client = client;
     }
@@ -39,6 +35,7 @@ public class AtmController {
 
     @GetMapping("/transaction")
     public SoldInquiryDto transaction(@RequestParam(defaultValue = "0") int cashAmount) {
+
         if (cashAmount < 0) {
             return null;
         }
@@ -53,13 +50,9 @@ public class AtmController {
                 noMoreCash = true;
         }
         if (!noMoreCash) {
-            return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(transactionBillsMap), "Transaction successful");
+            return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(transactionBillsMap), "Transaction approved");
         } else {
-            if (Math.random() > 0.5)
-                return client.getDataFromAdelina(URI.create(adelinaAtmUrl), cashAmount);
-            else
-                return client.getDataFromDiana(URI.create(dianaAtmUrl), cashAmount);
-
+            return client.getDataFromDiana(cashAmount);
         }
     }
 }
