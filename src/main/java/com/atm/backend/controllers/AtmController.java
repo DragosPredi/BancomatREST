@@ -24,7 +24,7 @@ public class AtmController {
     }
 
     @GetMapping("/online")
-    public ResponseEntity<String> online(){
+    public ResponseEntity<String> online() {
         return new ResponseEntity<>("Server is up", HttpStatus.OK);
     }
 
@@ -34,7 +34,7 @@ public class AtmController {
     }
 
     @GetMapping("/new-transaction")
-    public ResponseEntity<SoldInquiryDto> transaction(@RequestParam(defaultValue = "0") int sum){
+    public ResponseEntity<SoldInquiryDto> transaction(@RequestParam(defaultValue = "0") int sum) {
         return requestService.withdrawalRequest(sum);
     }
 }

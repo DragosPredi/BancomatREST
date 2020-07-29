@@ -1,7 +1,6 @@
 package com.atm.backend.infrastructure;
 
 public abstract class Bill {
-    int valueOfBill;
 
     public enum Type {
         ONE_RON(1),

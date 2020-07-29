@@ -7,11 +7,13 @@ import java.util.HashMap;
 
 public interface AtmService {
     SoldInquiryDto withdrawalRequest(int cashAmount);
+
     SoldInquiryDto availableCash();
 
     int getOneTypeBillQuantity(Bill.Type type);
 
     HashMap<Bill.Type, Integer> withdrawAllMoney();
+
     int totalAmountAvailable();
 
     void fillUpWithMap(HashMap<Bill.Type, Integer> billsToBeAdded);

@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class SoldInquiryDto {
 
-   Map<String, Integer> bills;
-   String message;
+    Map<String, Integer> bills;
+    String message;
 
     public SoldInquiryDto() {
 

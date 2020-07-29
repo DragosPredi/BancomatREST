@@ -1,13 +1,13 @@
 package com.atm.backend.services;
 
-import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RemoteAtmServiceImpl implements RemoteAtmService{
+public class RemoteAtmServiceImpl implements RemoteAtmService {
 
     AdelinaClient adelinaClient;
     DianaClient dianaClient;
@@ -30,15 +30,15 @@ public class RemoteAtmServiceImpl implements RemoteAtmService{
         return response.getStatusCode().is2xxSuccessful();
     }
 
-    public SoldInquiryDto remoteWithdrawalRequest(int cashAmount){
-        if(isOnlineDiana()){
+    public SoldInquiryDto remoteWithdrawalRequest(int cashAmount) {
+        if (isOnlineDiana()) {
             ResponseEntity<SoldInquiryDto> response = dianaClient.requestTransaction(cashAmount);
-            if(response.getStatusCode().is2xxSuccessful())
+            if (response.getStatusCode().is2xxSuccessful())
                 return response.getBody();
         }
-        if(isOnlineAdelina()){
+        if (isOnlineAdelina()) {
             ResponseEntity<SoldInquiryDto> response = adelinaClient.requestTransaction(cashAmount);
-            if(response.getStatusCode().is2xxSuccessful()) {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
         }

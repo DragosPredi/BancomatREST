@@ -1,8 +1,8 @@
 package com.atm.backend.services;
 
 import com.atm.backend.infrastructure.Bill;
-import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.infrastructure.MyUtils;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -41,9 +41,9 @@ public class AtmServiceImpl implements AtmService {
         }
     }
 
-    public void setATMState(int [] billsArr) {
+    public void setATMState(int[] billsArr) {
         int cont = 0;
-        for(Bill.Type type : Bill.Type.values()){
+        for (Bill.Type type : Bill.Type.values()) {
             numberOfBillsByType.put(type, billsArr[cont++]);
         }
     }
@@ -56,15 +56,15 @@ public class AtmServiceImpl implements AtmService {
      * @return -> index in array
      */
     public int billToArrayIndex(Bill.Type type) {
-        if(type.getLabelValue() == 1)
+        if (type.getLabelValue() == 1)
             return 0;
-        if(type.getLabelValue() == 5)
+        if (type.getLabelValue() == 5)
             return 1;
-        if(type.getLabelValue() == 10)
+        if (type.getLabelValue() == 10)
             return 2;
-        if(type.getLabelValue() == 50)
+        if (type.getLabelValue() == 50)
             return 3;
-        if(type.getLabelValue() == 100)
+        if (type.getLabelValue() == 100)
             return 4;
         return -1;
     }
@@ -135,19 +135,19 @@ public class AtmServiceImpl implements AtmService {
         return billsUsedHistory[cashAmount];
     }
 
-    public HashMap<Bill.Type, Integer> withdrawalRequestAsMap(int cashAmount){
-        int []bills = withdrawalRequestAsArray(cashAmount);
+    public HashMap<Bill.Type, Integer> withdrawalRequestAsMap(int cashAmount) {
+        int[] bills = withdrawalRequestAsArray(cashAmount);
         HashMap<Bill.Type, Integer> typeToNrOfBills = new HashMap<>();
         int cont = 0;
         for (Bill.Type billType : Bill.Type.values()) {
-            typeToNrOfBills.put(billType,bills[cont++]);
+            typeToNrOfBills.put(billType, bills[cont++]);
         }
         return typeToNrOfBills;
     }
 
     public SoldInquiryDto withdrawalRequest(int cashAmount) {
         HashMap<Bill.Type, Integer> map = withdrawalRequestAsMap(cashAmount);
-        if(map.containsValue(Integer.MAX_VALUE))
+        if (map.containsValue(Integer.MAX_VALUE))
             return null;
         return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(map), "Transaction approved");
     }
@@ -156,17 +156,17 @@ public class AtmServiceImpl implements AtmService {
         return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(numberOfBillsByType), "Available cash in ATM");
     }
 
-    public int totalAmountAvailable(){
+    public int totalAmountAvailable() {
         int sum = 0;
-        for(Bill.Type type : Bill.Type.values()){
+        for (Bill.Type type : Bill.Type.values()) {
             sum += numberOfBillsByType.get(type) * type.getLabelValue();
         }
         return sum;
     }
 
-    public HashMap<Bill.Type, Integer> withdrawAllMoney(){
+    public HashMap<Bill.Type, Integer> withdrawAllMoney() {
         HashMap<Bill.Type, Integer> requestedMoney = new HashMap<>();
-        for(Bill.Type type : Bill.Type.values()){
+        for (Bill.Type type : Bill.Type.values()) {
             requestedMoney.put(type, numberOfBillsByType.get(type));
             numberOfBillsByType.put(type, 0);
         }
@@ -175,7 +175,7 @@ public class AtmServiceImpl implements AtmService {
 
     @Override
     public void fillUpWithMap(HashMap<Bill.Type, Integer> billsToBeAdded) {
-        for(Bill.Type type : Bill.Type.values()){
+        for (Bill.Type type : Bill.Type.values()) {
             numberOfBillsByType.put(type, billsToBeAdded.get(type));
         }
     }
