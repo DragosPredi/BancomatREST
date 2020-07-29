@@ -1,23 +1,18 @@
 package com.atm.backend.services;
 
 import com.atm.backend.bills.Bill;
+import com.atm.backend.dto.SoldInquiryDto;
 
 import java.util.HashMap;
 
 public interface AtmService {
-    HashMap<Bill.Type, Integer> withdrawalRequestAsMap(int cashAmount);
-
-    int[] withdrawalRequestAsArray(int cashAmount);
-
-    HashMap<Bill.Type, Integer> getNumberOfBillsByTypeAsMap();
+    SoldInquiryDto withdrawalRequest(int cashAmount);
+    SoldInquiryDto availableCash();
 
     int getOneTypeBillQuantity(Bill.Type type);
 
-    void setATMState(int [] billsArr);
+    HashMap<Bill.Type, Integer> withdrawAllMoney();
+    int totalAmountAvailable();
 
-    void fillUpOneTypeBill(Bill.Type type, int quantity);
-
-    void addBills(int[] billsArr);
-
-    void removeBills(int[] billsArr);
+    void fillUpWithMap(HashMap<Bill.Type, Integer> billsToBeAdded);
 }

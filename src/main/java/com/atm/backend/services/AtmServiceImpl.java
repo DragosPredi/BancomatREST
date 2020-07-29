@@ -1,9 +1,12 @@
 package com.atm.backend.services;
 
 import com.atm.backend.bills.Bill;
+import com.atm.backend.dto.SoldInquiryDto;
+import com.atm.backend.myUtils.MyUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 
 @Service
 public class AtmServiceImpl implements AtmService {
@@ -14,44 +17,22 @@ public class AtmServiceImpl implements AtmService {
         setATMState(new int[]{100, 100, 100, 50, 50});
     }
 
-    /**
-     * Add cash to ATM
-     *
-     * @param type     -> type of bill to be added
-     * @param quantity -> number of bills
-     */
     public void fillUpOneTypeBill(Bill.Type type, int quantity) {
         int leftOverCash = numberOfBillsByType.get(type);
         numberOfBillsByType.put(type, quantity + leftOverCash);
     }
 
-    /**
-     * Getter for the amount of a certain type of bill
-     *
-     * @param type -> bill to be investigated
-     * @return -> number of bills of requested type
-     */
     public int getOneTypeBillQuantity(Bill.Type type) {
         return numberOfBillsByType.get(type);
     }
 
-    /**
-     * Used to add or remove multiple bills at once.
-     * if sign == 1 the bills are added, if sign == -1 the bills are removed
-     * <p>
-     * Each cell corresponds in ascending order to the available bills
-     * (1, 5, 10, 50, 100)
-     *
-     * @param billsToBeModified -> array conatining the number of bills to be modified
-     */
-    public void addBills(int[] billsToBeModified) {
+    public void fillUpAllTypeOfBills(int[] billsToBeModified) {
 
         int cont = 0;
         for (Bill.Type billType : Bill.Type.values()) {
             fillUpOneTypeBill(billType, billsToBeModified[cont++]);
         }
     }
-
 
     public void removeBills(int[] billsToBeModified) {
         int cont = 0;
@@ -60,12 +41,6 @@ public class AtmServiceImpl implements AtmService {
         }
     }
 
-    /**
-     * Set the ATM with a specified number of cash
-     *
-     * @param billsArr representing the number of bills
-     *                 in ascending order (One, Five, Ten, etc.)
-     */
     public void setATMState(int [] billsArr) {
         int cont = 0;
         for(Bill.Type type : Bill.Type.values()){
@@ -107,9 +82,9 @@ public class AtmServiceImpl implements AtmService {
 
         //Add last combination of bills no longer available
         if (billType == Bill.Type.ONE_RON) {
-            addBills(billsUsedHistory[currentAmount - 1]);
+            fillUpAllTypeOfBills(billsUsedHistory[currentAmount - 1]);
         } else {
-            addBills(billsUsedHistory[currentAmount]);
+            fillUpAllTypeOfBills(billsUsedHistory[currentAmount]);
         }
         //Get base combination
         System.arraycopy(billsUsedHistory[currentAmount - billValue],
@@ -131,7 +106,7 @@ public class AtmServiceImpl implements AtmService {
      * needed, it returns an array filled with MAX_INT
      *
      * @param cashAmount -> amount requested
-     * @return -> array with the bills requested or -1 in case of failure
+     * @return -> array with the bills requested or MAX_INT in case of failure
      */
     public int[] withdrawalRequestAsArray(int cashAmount) {
 
@@ -169,7 +144,40 @@ public class AtmServiceImpl implements AtmService {
         }
         return typeToNrOfBills;
     }
-    public HashMap<Bill.Type, Integer> getNumberOfBillsByTypeAsMap() {
-        return numberOfBillsByType;
+
+    public SoldInquiryDto withdrawalRequest(int cashAmount) {
+        HashMap<Bill.Type, Integer> map = withdrawalRequestAsMap(cashAmount);
+        if(map.containsValue(Integer.MAX_VALUE))
+            return null;
+        return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(map), "Transaction approved");
+    }
+
+    public SoldInquiryDto availableCash() {
+        return new SoldInquiryDto(MyUtils.billTypeToStringTypeMapConverter(numberOfBillsByType), "Available cash in ATM");
+    }
+
+    public int totalAmountAvailable(){
+        int sum = 0;
+        for(Bill.Type type : Bill.Type.values()){
+            sum += numberOfBillsByType.get(type) * type.getLabelValue();
+        }
+        return sum;
+    }
+
+    public HashMap<Bill.Type, Integer> withdrawAllMoney(){
+        HashMap<Bill.Type, Integer> requestedMoney = new HashMap<>();
+        for(Bill.Type type : Bill.Type.values()){
+            requestedMoney.put(type, numberOfBillsByType.get(type));
+            numberOfBillsByType.put(type, 0);
+        }
+        return requestedMoney;
+    }
+
+    @Override
+    public void fillUpWithMap(HashMap<Bill.Type, Integer> billsToBeAdded) {
+        for(Bill.Type type : Bill.Type.values()){
+            numberOfBillsByType.put(type, billsToBeAdded.get(type));
+        }
     }
 }
+
