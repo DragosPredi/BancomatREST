@@ -1,4 +1,4 @@
-package com.atm.backend.bills;
+package com.atm.backend.infrastructure;
 
 public abstract class Bill {
     int valueOfBill;

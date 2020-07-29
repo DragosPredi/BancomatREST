@@ -1,9 +1,8 @@
-package com.atm.backend.myUtils;
+package com.atm.backend.infrastructure;
 
-import com.atm.backend.bills.Bill;
+import com.atm.backend.infrastructure.Bill;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class MyUtils {
 

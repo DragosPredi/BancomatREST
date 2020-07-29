@@ -1,6 +1,6 @@
 package com.atm.backend.services;
 
-import com.atm.backend.dto.SoldInquiryDto;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
 import org.springframework.http.ResponseEntity;

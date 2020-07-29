@@ -1,9 +1,8 @@
-package com.atm.backend.myUtils;
+package com.atm.backend.infrastructure;
 
-import com.atm.backend.bills.Bill;
 import com.atm.backend.services.AtmService;
 
-public class CashManager {
+public class NotificationManager {
 
     private static void critical() {
         MyUtils.sendEmail("fillMeUpPlease@superbancomat.com",

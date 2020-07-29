@@ -1,10 +1,9 @@
 package com.atm.backend.services;
 
-import com.atm.backend.bills.Bill;
-import com.atm.backend.dto.SoldInquiryDto;
-import com.atm.backend.myUtils.MyUtils;
+import com.atm.backend.infrastructure.Bill;
+import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.MyUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

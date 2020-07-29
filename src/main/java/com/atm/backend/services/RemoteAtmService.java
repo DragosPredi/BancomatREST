@@ -1,6 +1,6 @@
 package com.atm.backend.services;
 
-import com.atm.backend.dto.SoldInquiryDto;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 
 public interface RemoteAtmService {
 

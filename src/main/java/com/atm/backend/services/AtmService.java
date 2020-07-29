@@ -1,7 +1,7 @@
 package com.atm.backend.services;
 
-import com.atm.backend.bills.Bill;
-import com.atm.backend.dto.SoldInquiryDto;
+import com.atm.backend.infrastructure.Bill;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 
 import java.util.HashMap;
 

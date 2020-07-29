@@ -1,7 +1,6 @@
 package com.atm.backend.controllers;
 
-import com.atm.backend.dto.SoldInquiryDto;
-import com.atm.backend.myUtils.MyUtils;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.services.AtmService;
 import com.atm.backend.services.CashRequestService;
 import com.atm.backend.services.RemoteAtmService;

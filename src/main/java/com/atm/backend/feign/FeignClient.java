@@ -1,7 +1,6 @@
 package com.atm.backend.feign;
 
-import com.atm.backend.dto.SoldInquiryDto;
-import org.springframework.http.RequestEntity;
+import com.atm.backend.infrastructure.SoldInquiryDto;
 import org.springframework.http.ResponseEntity;
 
 public interface FeignClient {
