@@ -1,19 +1,18 @@
 package com.bancomat;
 
+import com.atm.backend.bills.Bill;
 import com.atm.backend.dto.SoldInquiryDto;
 import com.atm.backend.services.AtmService;
-import com.atm.backend.bills.Bill;
 import com.atm.backend.services.AtmServiceImpl;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.jayway.restassured.RestAssured.get;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import static com.jayway.restassured.RestAssured.*;
 
 public class ATMTests {
 
@@ -41,7 +40,7 @@ public class ATMTests {
 
     @Test
     public void setATMStateChecker(){
-        AtmService tester = new AtmServiceImpl();
+        AtmServiceImpl tester = new AtmServiceImpl();
 
         int []bills = {85, 0, 75, 80, 10};
         tester.setATMState(bills);
@@ -50,7 +49,7 @@ public class ATMTests {
 
     @Test
     public void fillUpChecker() {
-        AtmService tester = new AtmServiceImpl();
+        AtmServiceImpl tester = new AtmServiceImpl();
 
         int []bills = {100, 100, 100, 50, 50};
 
@@ -68,7 +67,7 @@ public class ATMTests {
 
     @Test
     public void modifyNrBillsChecker() {
-        AtmService tester = new AtmServiceImpl();
+        AtmServiceImpl tester = new AtmServiceImpl();
 
         int []bills = {100, 100, 100, 50, 50};
 
@@ -76,7 +75,7 @@ public class ATMTests {
 
         setArray(bills, 5, 1, 2,3, 4);
 
-        tester.addBills(bills);
+        tester.fillUpAllTypeOfBills(bills);
 
         setArray(bills, 105, 101, 102, 53, 54);
         assertBillsQuantityHelper(bills, "Add bills is faulty", tester);
@@ -90,8 +89,39 @@ public class ATMTests {
     }
 
     @Test
-    public void withdrawalRequestsChecker() {
+    public void totalAmountAvailableChecker(){
+        AtmServiceImpl tester = new AtmServiceImpl();
+
+        assertEquals(9100, tester.totalAmountAvailable());
+        tester.withdrawalRequest(100);
+        assertEquals(9000, tester.totalAmountAvailable());
+        tester.withdrawalRequest(9000);
+        assertEquals(0, tester.totalAmountAvailable());
+    }
+
+    @Test
+    public void withdrawAllMoneyChecker(){
+        AtmServiceImpl tester = new AtmServiceImpl();
+        int []bills = {0, 0, 0, 0, 0};
+        tester.withdrawAllMoney();
+        assertBillsQuantityHelper(bills, "withdraw all money faulty", tester);
+        assertEquals(0, tester.totalAmountAvailable());
+
+    }
+
+    @Test
+    public void fillUpWithMapChecker(){
         AtmService tester = new AtmServiceImpl();
+        int []bills = {100, 100, 100, 50, 50};
+        HashMap<Bill.Type, Integer> map = tester.withdrawAllMoney();
+        tester.fillUpWithMap(map);
+        assertBillsQuantityHelper(bills, "fill up with map faulty", tester);
+
+    }
+
+    @Test
+    public void withdrawalRequestsChecker() {
+        AtmServiceImpl tester = new AtmServiceImpl();
 
         int []bills = {1, 0, 0, 1, 1};
 
@@ -111,7 +141,7 @@ public class ATMTests {
 
     @Test
     public void multipleWithdrawalRequestsChecker() {
-        AtmService tester = new AtmServiceImpl();
+        AtmServiceImpl tester = new AtmServiceImpl();
 
         int[] bills = {10, 9, 5, 1, 1};
         tester.setATMState(bills);
@@ -133,7 +163,7 @@ public class ATMTests {
     }
 
     @Test
-    public void withdraw101Test() {
+    public void withdraw101RestChecker() {
         SoldInquiryDto output = get("http://localhost:8080/transaction?cashAmount=101").as(SoldInquiryDto.class);
         Map<String, Integer> expected = new TreeMap<>();
         expected.put("ONEHUNDRED_RON(100)", 1);
@@ -147,7 +177,7 @@ public class ATMTests {
     }
 
     @Test
-    public void withdraw101and1000Test() {
+    public void withdraw101and1000RestChecker() {
         SoldInquiryDto output = get("http://localhost:8080/transaction?cashAmount=101").as(SoldInquiryDto.class);
         Map<String, Integer> expected = new TreeMap<>();
         expected.put("ONEHUNDRED_RON(100)", 1);
