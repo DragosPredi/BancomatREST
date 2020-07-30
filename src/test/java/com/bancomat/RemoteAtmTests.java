@@ -3,14 +3,13 @@ package com.bancomat;
 import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
 import com.atm.backend.services.RemoteAtmService;
-import com.atm.backend.services.RemoteAtmServiceImpl;
+import com.atm.backend.services.impl.RemoteAtmServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static com.jayway.restassured.RestAssured.get;
-import static com.jayway.restassured.RestAssured.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RemoteAtmTests {

@@ -1,8 +1,9 @@
-package com.atm.backend.services;
+package com.atm.backend.services.impl;
 
 import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
 import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.services.RemoteAtmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
