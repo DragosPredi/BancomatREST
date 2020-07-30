@@ -93,9 +93,9 @@ public class ATMTests {
         AtmServiceImpl tester = new AtmServiceImpl();
 
         assertEquals(9100, tester.totalAmountAvailable());
-        tester.withdrawalRequest(100);
+        tester.localWithdrawalRequest(100);
         assertEquals(9000, tester.totalAmountAvailable());
-        tester.withdrawalRequest(9000);
+        tester.localWithdrawalRequest(9000);
         assertEquals(0, tester.totalAmountAvailable());
     }
 

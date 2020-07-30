@@ -6,7 +6,7 @@ import com.atm.backend.infrastructure.SoldInquiryDto;
 import java.util.HashMap;
 
 public interface AtmService {
-    SoldInquiryDto withdrawalRequest(int cashAmount);
+    SoldInquiryDto localWithdrawalRequest(int cashAmount);
 
     SoldInquiryDto availableCash();
 

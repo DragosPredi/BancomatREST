@@ -145,7 +145,7 @@ public class AtmServiceImpl implements AtmService {
         return typeToNrOfBills;
     }
 
-    public SoldInquiryDto withdrawalRequest(int cashAmount) {
+    public SoldInquiryDto localWithdrawalRequest(int cashAmount) {
         HashMap<Bill.Type, Integer> map = withdrawalRequestAsMap(cashAmount);
         if (map.containsValue(Integer.MAX_VALUE))
             return null;
