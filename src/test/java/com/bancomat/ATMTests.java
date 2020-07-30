@@ -164,7 +164,7 @@ public class ATMTests {
 
     @Test
     public void withdraw101RestChecker() {
-        SoldInquiryDto output = get("http://localhost:8080/transaction?cashAmount=101").as(SoldInquiryDto.class);
+        SoldInquiryDto output = get("http://localhost:8080/api/new-transaction?sum=101").as(SoldInquiryDto.class);
         Map<String, Integer> expected = new TreeMap<>();
         expected.put("ONEHUNDRED_RON(100)", 1);
         expected.put("ONE_RON(1)", 1);
@@ -178,7 +178,7 @@ public class ATMTests {
 
     @Test
     public void withdraw101and1000RestChecker() {
-        SoldInquiryDto output = get("http://localhost:8080/transaction?cashAmount=101").as(SoldInquiryDto.class);
+        SoldInquiryDto output = get("http://localhost:8080/api/new-transaction?sum=101").as(SoldInquiryDto.class);
         Map<String, Integer> expected = new TreeMap<>();
         expected.put("ONEHUNDRED_RON(100)", 1);
         expected.put("ONE_RON(1)", 1);
@@ -188,7 +188,7 @@ public class ATMTests {
         assertEquals(expected, output.getBills());
         assertEquals("Transaction approved", output.getMessage());
 
-        output = get("http://localhost:8080/transaction?cashAmount=1000").as(SoldInquiryDto.class);
+        output = get("http://localhost:8080/api/new-transaction?sum=1000").as(SoldInquiryDto.class);
         expected.clear();
         expected.put("ONEHUNDRED_RON(100)", 10);
         expected.put("ONE_RON(1)", 0);
