@@ -30,7 +30,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", exception.getMessage());
+        body.put("message", "ATM remote are unavailable");
 
         return new ResponseEntity<>(body, HttpStatus.SERVICE_UNAVAILABLE);
     }
