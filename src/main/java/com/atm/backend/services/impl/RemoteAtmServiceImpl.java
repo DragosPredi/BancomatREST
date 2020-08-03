@@ -4,6 +4,7 @@ import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
 import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.services.RemoteAtmService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import feign.FeignException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class RemoteAtmServiceImpl implements RemoteAtmService {
         return responseEntity.getStatusCode().is2xxSuccessful();
     }
 
+    @HystrixCommand(fallbackMethod = "fallbackRemote")
     public SoldInquiryDto remoteWithdrawalRequest(int cashAmount) {
         if (isOnlineDiana()) {
             ResponseEntity<SoldInquiryDto> response = dianaClient.requestTransaction(cashAmount);
@@ -57,4 +59,7 @@ public class RemoteAtmServiceImpl implements RemoteAtmService {
         return null;
     }
 
+    public SoldInquiryDto fallbackRemote(int cashAmount){
+        return new SoldInquiryDto(null, "Transaction Failed");
+    }
 }
