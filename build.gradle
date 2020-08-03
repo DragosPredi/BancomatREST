@@ -4,34 +4,51 @@ plugins {
     id 'java'
 }
 
-group = 'com'
+group = 'com.example'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
 }
 
 ext {
-    set('springCloudVersion', 'Hoxton.SR5')
+    set('springCloudVersion', "Hoxton.SR6")
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4")
-
+    testCompile 'org.togglz:togglz-testing:2.2.0.Final'
+    testCompile 'org.togglz:togglz-junit:2.2.0.Final'
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile ('io.rest-assured:rest-assured:3.3.0')
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
     compile "org.togglz:togglz-spring-boot-starter:2.5.0.Final"
     compile "org.togglz:togglz-console:2.5.0.Final"
     compile "org.togglz:togglz-spring-security:2.5.0.Final"
-
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
-    testCompile('com.jayway.restassured:rest-assured:2.4.1')
-    testCompile "io.specto:hoverfly-java:0.13.0"
+    testCompile "io.specto:hoverfly-java:0.5.0"
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    dependencies {
+        compile "org.springframework.boot:spring-boot-configuration-processor"
+    }
+    repositories { jcenter() }
+    dependencies { testImplementation 'org.mockito:mockito-core:2.7.22' }
+}
+task copyConfigurationMetadata(type: Copy) {
+    from(compileJava) {
+        include 'META-INF/spring-configuration-metadata.json'
+    }
+    into "build/generated/sources/annotationProcessor"
+}
+compileJava {
+    dependsOn processResources
+    finalizedBy copyConfigurationMetadata
 }
 dependencyManagement {
     imports {
