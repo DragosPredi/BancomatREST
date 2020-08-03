@@ -31,6 +31,7 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
     testCompile('com.jayway.restassured:rest-assured:2.4.1')
+    testCompile "io.specto:hoverfly-java:0.13.0"
 }
 dependencyManagement {
     imports {
