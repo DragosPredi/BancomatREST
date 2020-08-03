@@ -1,5 +1,6 @@
 package com.atm.backend.services.impl;
 
+import com.atm.backend.exceptions.NotEnoughMoneyException;
 import com.atm.backend.infrastructure.Bill;
 import com.atm.backend.infrastructure.MyUtils;
 import com.atm.backend.infrastructure.SoldInquiryDto;
@@ -38,7 +39,7 @@ public class CashRequestServiceImpl implements CashRequestService {
         HashMap<Bill.Type, Integer> availableInLocalAtm = localAtm.withdrawAllMoney();
         SoldInquiryDto body = requestRemoteCashDifference(amountRequired);
 
-        if (body != null) {
+        if (body != null && body.getBills() != null) {
             HashMap<String, Integer> localBills = MyUtils.billTypeToStringTypeMapConverter(availableInLocalAtm);
             body.setBills(addMapValues(body.getBills(), localBills));
             return new ResponseEntity<>(body, HttpStatus.OK);

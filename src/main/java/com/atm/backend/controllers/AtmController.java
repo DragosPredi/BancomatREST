@@ -1,5 +1,6 @@
 package com.atm.backend.controllers;
 
+import com.atm.backend.exceptions.NotEnoughMoneyException;
 import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.services.AtmService;
 import com.atm.backend.services.CashRequestService;
@@ -35,6 +36,10 @@ public class AtmController {
 
     @GetMapping("/new-transaction")
     public ResponseEntity<SoldInquiryDto> transaction(@RequestParam(defaultValue = "0") int sum) {
-        return requestService.withdrawalRequest(sum);
+        ResponseEntity<SoldInquiryDto> sold = requestService.withdrawalRequest(sum);
+        if(sold != null)
+            return sold;
+        else
+            throw new NotEnoughMoneyException();
     }
 }
