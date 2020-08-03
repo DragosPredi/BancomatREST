@@ -4,6 +4,7 @@ import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
 import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.services.RemoteAtmService;
+import feign.FeignException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,24 @@ public class RemoteAtmServiceImpl implements RemoteAtmService {
 
     @Override
     public boolean isOnlineAdelina() {
-        ResponseEntity<String> response = adelinaClient.isOnline();
-        return response.getStatusCode().is2xxSuccessful();
+        ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = adelinaClient.isOnline();
+        } catch (FeignException e) {
+            return false;
+        }
+        return responseEntity.getStatusCode().is2xxSuccessful();
     }
 
     @Override
     public boolean isOnlineDiana() {
-        ResponseEntity<String> response = dianaClient.isOnline();
-        return response.getStatusCode().is2xxSuccessful();
+        ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = dianaClient.isOnline();
+        } catch (FeignException e) {
+            return false;
+        }
+        return responseEntity.getStatusCode().is2xxSuccessful();
     }
 
     public SoldInquiryDto remoteWithdrawalRequest(int cashAmount) {
