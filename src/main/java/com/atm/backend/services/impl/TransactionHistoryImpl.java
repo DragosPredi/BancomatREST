@@ -2,6 +2,7 @@ package com.atm.backend.services.impl;
 
 import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.services.TransactionHistoryService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -18,6 +19,9 @@ import java.util.Map;
 @Service
 public class TransactionHistoryImpl implements TransactionHistoryService {
     List<Map<String, Integer>> transactionHistory;
+
+    @Value("${transaction_history_file}")
+    String filename;
 
     private static CellProcessor[] getProcessors() {
 
@@ -47,7 +51,7 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
 
     @Override
     public void saveHistoryToFileAsCsv() throws IOException {
-        try (ICsvMapWriter mapWriter = new CsvMapWriter(new FileWriter("transaction_history.csv"),
+        try (ICsvMapWriter mapWriter = new CsvMapWriter(new FileWriter(filename),
                 CsvPreference.STANDARD_PREFERENCE)) {
 
             final CellProcessor[] processors = getProcessors();
