@@ -1,7 +1,9 @@
 package com.atm.backend.services.impl;
 
 import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.TransactionHistoryDto;
 import com.atm.backend.services.TransactionHistoryService;
+import com.sun.tools.javac.util.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -16,31 +18,21 @@ import org.supercsv.prefs.CsvPreference;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionHistoryImpl implements TransactionHistoryService {
-    List<Map<String, Integer>> transactionHistory;
+    List<Pair<Map<String, Integer>, LocalDateTime>> transactionHistory;
 
     @Value("${transaction_history_file_cvs}")
     String CvsFilename;
     @Value("${transaction_history_file_pdf}")
     String PdfFilename;
 
-    private static CellProcessor[] getProcessors() {
-
-        final CellProcessor[] processors = new CellProcessor[] {
-                new NotNull(),
-                new NotNull(),
-                new NotNull(),
-                new NotNull(),
-                new NotNull()
-        };
-
-        return processors;
-    }
 
     public TransactionHistoryImpl() {
         this.transactionHistory = new LinkedList<>();
@@ -48,7 +40,7 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
 
     @Override
     public void addRecord(SoldInquiryDto data) {
-        transactionHistory.add(data.getBills());
+        transactionHistory.add(new Pair<>(data.getBills(), LocalDateTime.now()));
     }
 
     static String[] getHeader(){
@@ -66,9 +58,9 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
             mapWriter.writeHeader(getHeader());
 
             // write the maps
-            transactionHistory.forEach(map -> {
+            transactionHistory.forEach(p -> {
                 try {
-                    mapWriter.write(map, getHeader(), processors);
+                    mapWriter.write(p.fst, getHeader(), processors);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -86,8 +78,8 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
         contentStream.setFont(PDType1Font.COURIER, 10);
         contentStream.beginText();
         contentStream.newLineAtOffset(25, 700);
-        for(Map<String, Integer> map : transactionHistory){
-            contentStream.showText(map.toString());
+        for(Pair pair : transactionHistory){
+            contentStream.showText(pair.fst.toString());
             contentStream.newLineAtOffset(0, 10);
         }
 
@@ -97,5 +89,25 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
 
         document.save(PdfFilename);
         document.close();
+    }
+
+    public TransactionHistoryDto getTransactionHistory(int minutes){
+        LocalDateTime referenceTime = LocalDateTime.now().minusMinutes(minutes);
+        return new TransactionHistoryDto(transactionHistory
+                .stream()
+                .filter(p -> p.snd.isAfter(referenceTime))
+                .collect(Collectors.toList()));
+    }
+    private static CellProcessor[] getProcessors() {
+
+        final CellProcessor[] processors = new CellProcessor[] {
+                new NotNull(),
+                new NotNull(),
+                new NotNull(),
+                new NotNull(),
+                new NotNull()
+        };
+
+        return processors;
     }
 }
