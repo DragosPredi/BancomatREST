@@ -41,14 +41,17 @@ public class AtmController {
         return new ResponseEntity<>(Atm.availableCash(), HttpStatus.OK);
     }
 
-    @GetMapping("/save-records")
-    public String saveRecords(){
-        try {
-            historyService.saveHistoryToFileAsCsv();
-        } catch (CsvRequiredFieldEmptyException | CsvDataTypeMismatchException | IOException e) {
-            e.printStackTrace();
-        }
+    @GetMapping("/save-records/cvs")
+    public String saveRecordsAsCvs() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
+
+        historyService.saveHistoryToFileAsCsv();
         return "Success";
+    }
+
+    @GetMapping("/save-records/pdf")
+    public String saveRecordsAsPdf() throws IOException {
+        historyService.saveHistoryToFileAsPdf();
+        return "Succes";
     }
 
     @GetMapping("/new-transaction")

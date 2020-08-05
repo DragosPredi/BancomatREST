@@ -2,6 +2,10 @@ package com.atm.backend.services.impl;
 
 import com.atm.backend.infrastructure.SoldInquiryDto;
 import com.atm.backend.services.TransactionHistoryService;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.supercsv.cellprocessor.constraint.NotNull;
@@ -20,8 +24,10 @@ import java.util.Map;
 public class TransactionHistoryImpl implements TransactionHistoryService {
     List<Map<String, Integer>> transactionHistory;
 
-    @Value("${transaction_history_file}")
-    String filename;
+    @Value("${transaction_history_file_cvs}")
+    String CvsFilename;
+    @Value("${transaction_history_file_pdf}")
+    String PdfFilename;
 
     private static CellProcessor[] getProcessors() {
 
@@ -51,7 +57,7 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
 
     @Override
     public void saveHistoryToFileAsCsv() throws IOException {
-        try (ICsvMapWriter mapWriter = new CsvMapWriter(new FileWriter(filename),
+        try (ICsvMapWriter mapWriter = new CsvMapWriter(new FileWriter(CvsFilename),
                 CsvPreference.STANDARD_PREFERENCE)) {
 
             final CellProcessor[] processors = getProcessors();
@@ -69,5 +75,27 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
             });
 
         }
+    }
+
+    public void saveHistoryToFileAsPdf() throws IOException {
+        PDDocument document = new PDDocument();
+        PDPage page = new PDPage();
+        document.addPage(page);
+
+        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+        contentStream.setFont(PDType1Font.COURIER, 10);
+        contentStream.beginText();
+        contentStream.newLineAtOffset(25, 700);
+        for(Map<String, Integer> map : transactionHistory){
+            contentStream.showText(map.toString());
+            contentStream.newLineAtOffset(0, 10);
+        }
+
+        contentStream.endText();
+        contentStream.close();
+
+
+        document.save(PdfFilename);
+        document.close();
     }
 }

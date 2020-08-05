@@ -9,4 +9,5 @@ import java.io.IOException;
 public interface TransactionHistoryService {
     void addRecord(SoldInquiryDto data);
     void saveHistoryToFileAsCsv() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException;
+    void saveHistoryToFileAsPdf() throws IOException;
 }
