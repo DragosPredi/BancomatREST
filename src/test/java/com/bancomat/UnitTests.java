@@ -14,7 +14,7 @@ import static io.restassured.RestAssured.get;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ATMTests {
+public class UnitTests {
 
     public void setArray(int[] arr, int one, int five, int ten, int fifty, int oneH) {
         arr[0] = one;
@@ -162,42 +162,6 @@ public class ATMTests {
         assertArrayEquals(bills, tester.withdrawalRequestAsArray(968));
     }
 
-    @Test
-    public void withdraw101RestChecker() {
-        SoldInquiryDto output = get("http://localhost:8080/api/new-transaction?sum=101").as(SoldInquiryDto.class);
-        Map<String, Integer> expected = new TreeMap<>();
-        expected.put("ONEHUNDRED_RON(100)", 1);
-        expected.put("ONE_RON(1)", 1);
-        expected.put("TEN_RON(10)", 0);
-        expected.put("FIVE_RON(5)", 0);
-        expected.put("FIFTY_RON(50)", 0);
 
-        assertEquals(expected, output.getBills());
-        assertEquals("Transaction approved", output.getMessage());
-    }
-
-    @Test
-    public void withdraw101and1000RestChecker() {
-        SoldInquiryDto output = get("http://localhost:8080/api/new-transaction?sum=101").as(SoldInquiryDto.class);
-        Map<String, Integer> expected = new TreeMap<>();
-        expected.put("ONEHUNDRED_RON(100)", 1);
-        expected.put("ONE_RON(1)", 1);
-        expected.put("TEN_RON(10)", 0);
-        expected.put("FIVE_RON(5)", 0);
-        expected.put("FIFTY_RON(50)", 0);
-        assertEquals(expected, output.getBills());
-        assertEquals("Transaction approved", output.getMessage());
-
-        output = get("http://localhost:8080/api/new-transaction?sum=1000").as(SoldInquiryDto.class);
-        expected.clear();
-        expected.put("ONEHUNDRED_RON(100)", 10);
-        expected.put("ONE_RON(1)", 0);
-        expected.put("TEN_RON(10)", 0);
-        expected.put("FIVE_RON(5)", 0);
-        expected.put("FIFTY_RON(50)", 0);
-
-        assertEquals(expected, output.getBills());
-        assertEquals("Transaction approved", output.getMessage());
-    }
 
 }
