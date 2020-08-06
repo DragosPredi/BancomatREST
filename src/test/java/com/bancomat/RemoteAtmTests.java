@@ -2,7 +2,7 @@ package com.bancomat;
 
 import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
-import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
 import com.atm.backend.services.RemoteAtmService;
 import com.atm.backend.services.impl.RemoteAtmServiceImpl;
 import feign.FeignException;

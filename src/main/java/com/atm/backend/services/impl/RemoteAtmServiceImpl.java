@@ -2,7 +2,7 @@ package com.atm.backend.services.impl;
 
 import com.atm.backend.feign.AdelinaClient;
 import com.atm.backend.feign.DianaClient;
-import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
 import com.atm.backend.services.RemoteAtmService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import feign.FeignException;

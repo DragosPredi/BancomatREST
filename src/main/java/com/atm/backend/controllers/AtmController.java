@@ -1,8 +1,8 @@
 package com.atm.backend.controllers;
 
 import com.atm.backend.exceptions.NotEnoughMoneyException;
-import com.atm.backend.infrastructure.SoldInquiryDto;
-import com.atm.backend.infrastructure.TransactionHistoryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.TransactionHistoryDto;
 import com.atm.backend.services.AtmService;
 import com.atm.backend.services.CashRequestService;
 import com.atm.backend.services.RemoteAtmService;
@@ -42,7 +42,7 @@ public class AtmController {
         return new ResponseEntity<>(Atm.availableCash(), HttpStatus.OK);
     }
 
-    @GetMapping("/save-records/cvs")
+    @GetMapping("/save-records/csv")
     public String saveRecordsAsCvs() throws CsvRequiredFieldEmptyException, IOException, CsvDataTypeMismatchException {
 
         historyService.saveHistoryToFileAsCsv();
@@ -59,7 +59,6 @@ public class AtmController {
     public ResponseEntity<TransactionHistoryDto> history(@RequestParam(defaultValue = "0") int minutes) {
         return new ResponseEntity<>(historyService.getTransactionHistory(minutes), HttpStatus.OK);
     }
-
 
     @GetMapping("/new-transaction")
     public ResponseEntity<SoldInquiryDto> transaction(@RequestParam(defaultValue = "0") int sum) {

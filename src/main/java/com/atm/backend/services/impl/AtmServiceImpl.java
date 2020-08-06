@@ -2,7 +2,7 @@ package com.atm.backend.services.impl;
 
 import com.atm.backend.infrastructure.Bill;
 import com.atm.backend.infrastructure.MyUtils;
-import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
 import com.atm.backend.services.AtmService;
 import org.springframework.stereotype.Service;
 

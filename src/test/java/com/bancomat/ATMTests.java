@@ -1,7 +1,7 @@
 package com.bancomat;
 
 import com.atm.backend.infrastructure.Bill;
-import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
 import com.atm.backend.services.AtmService;
 import com.atm.backend.services.impl.AtmServiceImpl;
 import org.junit.jupiter.api.Test;

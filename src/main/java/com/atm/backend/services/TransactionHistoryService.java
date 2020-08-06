@@ -1,7 +1,7 @@
 package com.atm.backend.services;
 
-import com.atm.backend.infrastructure.SoldInquiryDto;
-import com.atm.backend.infrastructure.TransactionHistoryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.TransactionHistoryDto;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 

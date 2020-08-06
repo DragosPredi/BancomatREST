@@ -1,9 +1,9 @@
 package com.atm.backend.services.impl;
 
-import com.atm.backend.infrastructure.SoldInquiryDto;
-import com.atm.backend.infrastructure.TransactionHistoryDto;
+import com.atm.backend.infrastructure.TransactionBlueprint;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.TransactionHistoryDto;
 import com.atm.backend.services.TransactionHistoryService;
-import com.sun.tools.javac.util.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -21,12 +21,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class TransactionHistoryImpl implements TransactionHistoryService {
-    List<Pair<Map<String, Integer>, LocalDateTime>> transactionHistory;
+    List<TransactionBlueprint> transactionHistory;
 
     @Value("${transaction_history_file_cvs}")
     String CvsFilename;
@@ -40,7 +39,7 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
 
     @Override
     public void addRecord(SoldInquiryDto data) {
-        transactionHistory.add(new Pair<>(data.getBills(), LocalDateTime.now()));
+        transactionHistory.add(new TransactionBlueprint(data.getBills(), LocalDateTime.now()));
     }
 
     static String[] getHeader(){
@@ -58,9 +57,9 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
             mapWriter.writeHeader(getHeader());
 
             // write the maps
-            transactionHistory.forEach(p -> {
+            transactionHistory.forEach(oneTransaction -> {
                 try {
-                    mapWriter.write(p.fst, getHeader(), processors);
+                    mapWriter.write(oneTransaction.getBillsUsed(), getHeader(), processors);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -78,8 +77,8 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
         contentStream.setFont(PDType1Font.COURIER, 10);
         contentStream.beginText();
         contentStream.newLineAtOffset(25, 700);
-        for(Pair pair : transactionHistory){
-            contentStream.showText(pair.fst.toString());
+        for(TransactionBlueprint oneTransaction : transactionHistory){
+            contentStream.showText(oneTransaction.getBillsUsed().toString());
             contentStream.newLineAtOffset(0, 10);
         }
 
@@ -95,7 +94,7 @@ public class TransactionHistoryImpl implements TransactionHistoryService {
         LocalDateTime referenceTime = LocalDateTime.now().minusMinutes(minutes);
         return new TransactionHistoryDto(transactionHistory
                 .stream()
-                .filter(p -> p.snd.isAfter(referenceTime))
+                .filter(oneTransaction -> oneTransaction.getTimeAtWhichTransactionOccurred().isAfter(referenceTime))
                 .collect(Collectors.toList()));
     }
     private static CellProcessor[] getProcessors() {

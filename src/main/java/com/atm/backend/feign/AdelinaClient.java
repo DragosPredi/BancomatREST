@@ -1,6 +1,6 @@
 package com.atm.backend.feign;
 
-import com.atm.backend.infrastructure.SoldInquiryDto;
+import com.atm.backend.infrastructure.dto.SoldInquiryDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.atm.backend.infrastructure;
+package com.atm.backend.infrastructure.dto;
 
 import java.util.Map;
 
